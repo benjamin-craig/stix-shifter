@@ -186,7 +186,7 @@ class Connector(BaseJsonSyncConnector):
             if self.init_error:
                 raise self.init_error
 
-            response = await self.api_client.get_detections_IDs(query, result_limit)
+            response = await self.api_client.get_alert_IDs(query, result_limit)
             self._handle_errors(response, ids_obj)
             response_json = json.loads(ids_obj["data"])
             ids_obj['ids'] = response_json.get('resources')
