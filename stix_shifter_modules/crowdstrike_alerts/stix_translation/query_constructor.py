@@ -31,9 +31,7 @@ class CSQueryStringPatternTranslator:
 
     @staticmethod
     def _to_cs_timestamp(ts: str) -> str:
-        stripped = ts[2:-2]
-        if '.' in stripped:
-            stripped = stripped.split('.', 1)[0]
+        stripped = ts[2:-1]
         return stripped
 
     def _format_start_stop_qualifier(self, expression, qualifier: StartStopQualifier) -> str:
@@ -138,7 +136,7 @@ class CSQueryStringPatternTranslator:
 
     def _add_default_timerange(self, query):
         if self.time_range and 'timestamp' not in query:
-            d = (datetime.today() - timedelta(hours=0, minutes=self.time_range)).isoformat()
+            d = (datetime.today() - timedelta(hours=0, minutes=self.time_range)).isoformat
             n_query = "(({}) + timestamp:> '{}')".format(query, d)
             return n_query
 

@@ -9,7 +9,6 @@ from requests.exceptions import ConnectionError
 class QueryException(Exception):
     pass
 
-
 class Connector(BaseJsonSyncConnector):
     init_error = None
     logger = logger.set_logger(__name__)
@@ -123,7 +122,6 @@ class Connector(BaseJsonSyncConnector):
         for ids_lst in ids:
             curr_obj = await self.send_info_request_and_handle_errors(ids_lst)
             return_obj['data'].extend(curr_obj['data'])
-
         return return_obj
 
     @staticmethod
@@ -133,45 +131,6 @@ class Connector(BaseJsonSyncConnector):
             return connection['options'].get('result_limit', default_result_limit)
         return default_result_limit
 
-    @staticmethod
-    def _handle_quarantined_files(qua_files_lst, device_data):
-        qua_files_event_lst = []
-        if qua_files_lst:
-            for file_dict in qua_files_lst:
-                qua_file_data = dict()
-                qua_file_data['display_name'] = file_dict['state']
-                qua_file_data['quarantined_file_sha256'] = file_dict['sha256']
-                qua_file_data['provider'] = Connector.PROVIDER
-                qua_file_data.update(device_data)
-                qua_files_event_lst.append(qua_file_data)
-
-        return qua_files_event_lst
-
-    @staticmethod
-    def _handle_ioc(ioc_type, ioc_source, ioc_value):
-        # ioc_value may contains many values separated by ','
-        # first, we'll take the first value
-        ioc_value = ioc_value.split(',')[0]  # TODO - handle the rest values
-        ioc_data = dict()
-        file_sources = ['file_read', 'file_write', 'library_load']
-        # handle ioc_source = file_read / file_write
-        if ioc_source and ioc_type and ioc_source in file_sources:
-            if 'sha256' in ioc_type:
-                ioc_data['sha256_ioc'] = ioc_value
-            elif 'md5' in ioc_type:
-                ioc_data['md5_ioc'] = ioc_value.replace("_", " ")
-            ioc_data['display_name'] = ioc_source.replace("_", " ")
-
-        # handle ioc_type = domain
-        elif ioc_type and 'domain' in ioc_type:
-            ioc_data['domain_ioc'] = ioc_value
-
-        # handle ioc_type = 'registry_key'
-        elif ioc_type and 'registry_key' in ioc_type:
-            ioc_data['registry_key'] = ioc_value
-
-        return ioc_data
-
     async def create_results_connection(self, query, offset, length):
         """"built the response object
         :param query: str, search_id
@@ -180,7 +139,6 @@ class Connector(BaseJsonSyncConnector):
         result_limit = offset + length
         ids_obj = dict()
         return_obj = dict()
-        table_event_data = []
 
         try:
             if self.init_error:
