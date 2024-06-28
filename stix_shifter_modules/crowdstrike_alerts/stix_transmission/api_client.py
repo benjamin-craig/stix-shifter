@@ -1,5 +1,6 @@
 """Apiclient for Crowdstrike Alerts"""
 import json
+from urllib.parse import urlencode
 from stix_shifter_utils.stix_transmission.utils.RestApiClientAsync import RestApiClientAsync
 from datetime import datetime, timedelta
 
@@ -30,6 +31,8 @@ class APIClient:
         self._token = None
         self._token_time = None
 
+#"((device.external_ip:! '1.1.1.1',device.local_ip:! '1.1.1.1',network_accesses.local_address:! '1.1.1.1',network_accesses.remote_address:! '1.1.1.1') %2B (timestamp:>= '2024-05-01T11:00:00.000Z' %2B timestamp:<= '2024-05-01T11:54:00.000Z'))"
+#"filter=((device.external_ip:! '1.1.1.1',device.local_ip:! '1.1.1.1',network_accesses.local_address:! '1.1.1.1',network_accesses.remote_address:! '1.1.1.1') %2B (timestamp:>= '2024-05-01T11:00:00.000Z' %2B timestamp:<= '2024-05-01T11:54:00.000Z'))"
     async def get_alert_IDs(self, filter, limit, sort=None):
         """get the response from MSatp endpoints
         :param filter: filter incidents by certain value
@@ -42,7 +45,7 @@ class APIClient:
         headers['Accept'] = 'application/json'
         headers['user-agent'] = 'oca_stixshifter_1.0'
         headers['Authorization'] = f'Bearer {token}'
-        endpoint = self.ALERT_IDS_ENDPOINT + "?" + filter
+        endpoint = self.ALERT_IDS_ENDPOINT + "?filter=" + filter
         data['limit'] = limit
         if sort:
             data['sort'] = sort

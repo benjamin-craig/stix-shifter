@@ -38,9 +38,9 @@ class CSQueryStringPatternTranslator:
         start = self._to_cs_timestamp(qualifier.start)
         stop = self._to_cs_timestamp(qualifier.stop)
 
-        start_stop_query = "(timestamp:>= '{}' + timestamp:<= '{}')".format(start, stop)
+        start_stop_query = "(timestamp:>= '{}' %2B timestamp:<= '{}')".format(start, stop)
 
-        return "({}) + {}".format(expression, start_stop_query)
+        return "({}) %2B {}".format(expression, start_stop_query)
 
     def _parse_mapped_fields(self, value, comparator, mapped_fields_array) -> str:
         """Convert a list of mapped fields into a query string."""
@@ -137,7 +137,7 @@ class CSQueryStringPatternTranslator:
     def _add_default_timerange(self, query):
         if self.time_range and 'timestamp' not in query:
             d = (datetime.today() - timedelta(hours=0, minutes=self.time_range)).isoformat
-            n_query = "(({}) + timestamp:> '{}')".format(query, d)
+            n_query = "(({}) %2B timestamp:> '{}')".format(query, d)
             return n_query
 
         return query

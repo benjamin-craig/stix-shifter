@@ -1,5 +1,5 @@
 {
-    "ComparisonExpressionOperators.And": "+",
+    "ComparisonExpressionOperators.And": "%2B",
     "ComparisonExpressionOperators.Or": ",",
     "ComparisonComparators.Equal": ":",
     "ComparisonComparators.NotEqual": ":!",

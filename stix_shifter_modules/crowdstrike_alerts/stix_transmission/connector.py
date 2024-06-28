@@ -153,6 +153,8 @@ class Connector(BaseJsonSyncConnector):
                 return_obj = await self.handle_detection_info_request(ids_obj['ids'])
 
             if not return_obj.get('success'):
+                if(not return_obj.get('data')):
+                    return_obj['data'] = {}
                 return_obj['success'] = True
             return return_obj
         except QueryException as ex:
