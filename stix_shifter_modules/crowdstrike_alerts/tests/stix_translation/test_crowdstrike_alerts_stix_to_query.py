@@ -48,67 +48,67 @@ class TestCrowdStrikeAlertsTransformResults(unittest.TestCase, object):
     def test_comparison_and(self):
         stix_pattern = "[ipv4-addr:value = '1.1.1.1' AND ipv4-addr:value = '1.1.1.2' AND mac-addr:value = '48:4D:7E:9D:BD:97'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["(((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1') + (device.external_ip: '1.1.1.2',device.local_ip: '1.1.1.2',network_accesses.local_address: '1.1.1.2',network_accesses.remote_address: '1.1.1.2')) + (device.mac_address: '48:4D:7E:9D:BD:97')) + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10')"]
+        queries = ["(((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1') %2B (device.external_ip: '1.1.1.2',device.local_ip: '1.1.1.2',network_accesses.local_address: '1.1.1.2',network_accesses.remote_address: '1.1.1.2')) %2B (device.mac_address: '48:4D:7E:9D:BD:97')) %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10')"]
         self._test_query_assertions(query, queries)
         
     def test_comparison_or(self):
         stix_pattern = "[ipv4-addr:value = '1.1.1.1' OR ipv4-addr:value = '1.1.1.2' OR mac-addr:value = '48:4D:7E:9D:BD:97'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["(((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1') , (device.external_ip: '1.1.1.2',device.local_ip: '1.1.1.2',network_accesses.local_address: '1.1.1.2',network_accesses.remote_address: '1.1.1.2')) , (device.mac_address: '48:4D:7E:9D:BD:97')) + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10')"]
+        queries = ["(((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1') , (device.external_ip: '1.1.1.2',device.local_ip: '1.1.1.2',network_accesses.local_address: '1.1.1.2',network_accesses.remote_address: '1.1.1.2')) , (device.mac_address: '48:4D:7E:9D:BD:97')) %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10')"]
         self._test_query_assertions(query, queries)
         
     def test_equals(self):
         stix_pattern = "[ipv4-addr:value = '1.1.1.1'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_not_equals(self):
         stix_pattern = "[ipv4-addr:value != '1.1.1.1'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.external_ip:! '1.1.1.1',device.local_ip:! '1.1.1.1',network_accesses.local_address:! '1.1.1.1',network_accesses.remote_address:! '1.1.1.1') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.external_ip:! '1.1.1.1',device.local_ip:! '1.1.1.1',network_accesses.local_address:! '1.1.1.1',network_accesses.remote_address:! '1.1.1.1') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_greater_than(self):
         stix_pattern = "[x-oca-asset:x_device_cid > '1000'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.cid:> '1000') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.cid:> '1000') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_greater_than_or_equals(self):
         stix_pattern = "[x-oca-asset:x_device_cid >= '1000'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.cid:>= '1000') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.cid:>= '1000') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_less_than(self):
         stix_pattern = "[x-oca-asset:x_device_cid < '1000'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.cid:< '1000') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.cid:< '1000') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_less_than_or_equals(self):
         stix_pattern = "[x-oca-asset:x_device_cid <= '1000'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.cid:<= '1000') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.cid:<= '1000') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_in(self):
         stix_pattern = "[ipv4-addr:value IN ('1.1.1.1','1.1.1.2','1.1.1.3','1.1.1.4','1.1.1.5')] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1',device.external_ip: '1.1.1.2',device.local_ip: '1.1.1.2',network_accesses.local_address: '1.1.1.2',network_accesses.remote_address: '1.1.1.2',device.external_ip: '1.1.1.3',device.local_ip: '1.1.1.3',network_accesses.local_address: '1.1.1.3',network_accesses.remote_address: '1.1.1.3',device.external_ip: '1.1.1.4',device.local_ip: '1.1.1.4',network_accesses.local_address: '1.1.1.4',network_accesses.remote_address: '1.1.1.4',device.external_ip: '1.1.1.5',device.local_ip: '1.1.1.5',network_accesses.local_address: '1.1.1.5',network_accesses.remote_address: '1.1.1.5') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.external_ip: '1.1.1.1',device.local_ip: '1.1.1.1',network_accesses.local_address: '1.1.1.1',network_accesses.remote_address: '1.1.1.1',device.external_ip: '1.1.1.2',device.local_ip: '1.1.1.2',network_accesses.local_address: '1.1.1.2',network_accesses.remote_address: '1.1.1.2',device.external_ip: '1.1.1.3',device.local_ip: '1.1.1.3',network_accesses.local_address: '1.1.1.3',network_accesses.remote_address: '1.1.1.3',device.external_ip: '1.1.1.4',device.local_ip: '1.1.1.4',network_accesses.local_address: '1.1.1.4',network_accesses.remote_address: '1.1.1.4',device.external_ip: '1.1.1.5',device.local_ip: '1.1.1.5',network_accesses.local_address: '1.1.1.5',network_accesses.remote_address: '1.1.1.5') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_negate_equals(self):
         stix_pattern = "[mac-addr:value NOT = '48:4D:7E:9D:BD:97'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.mac_address:! '48:4D:7E:9D:BD:97') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.mac_address:! '48:4D:7E:9D:BD:97') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
         
     def test_negate_not_equals(self):
         stix_pattern = "[mac-addr:value NOT != '48:4D:7E:9D:BD:97'] START t'2019-09-01T08:43:10.003Z' STOP t'2019-10-10T10:43:10.003Z'"
         query = translation.translate('crowdstrike_alerts', 'query', '{}', stix_pattern)
-        queries = ["((device.mac_address:! '48:4D:7E:9D:BD:97') + (timestamp:>= '2019-09-01T08:43:10' + timestamp:<= '2019-10-10T10:43:10'))"]
+        queries = ["((device.mac_address:! '48:4D:7E:9D:BD:97') %2B (timestamp:>= '2019-09-01T08:43:10' %2B timestamp:<= '2019-10-10T10:43:10'))"]
         self._test_query_assertions(query, queries)
 
 Valid_Stix_Parameters = [

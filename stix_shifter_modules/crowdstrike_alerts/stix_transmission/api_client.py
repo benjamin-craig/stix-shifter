@@ -31,12 +31,10 @@ class APIClient:
         self._token = None
         self._token_time = None
 
-#"((device.external_ip:! '1.1.1.1',device.local_ip:! '1.1.1.1',network_accesses.local_address:! '1.1.1.1',network_accesses.remote_address:! '1.1.1.1') %2B (timestamp:>= '2024-05-01T11:00:00.000Z' %2B timestamp:<= '2024-05-01T11:54:00.000Z'))"
-#"filter=((device.external_ip:! '1.1.1.1',device.local_ip:! '1.1.1.1',network_accesses.local_address:! '1.1.1.1',network_accesses.remote_address:! '1.1.1.1') %2B (timestamp:>= '2024-05-01T11:00:00.000Z' %2B timestamp:<= '2024-05-01T11:54:00.000Z'))"
     async def get_alert_IDs(self, filter, limit, sort=None):
-        """get the response from MSatp endpoints
-        :param filter: filter incidents by certain value
-        :param sort: sort incidents according to sort value
+        """Request a list of Detection ID's that match the filter.
+        :param filter: filter ID's by certain value
+        :param sort: sort ID's according to sort value
         :return: response, json object"""
         headers = dict()
         data = dict()
@@ -52,7 +50,7 @@ class APIClient:
         return await self.client.call_api(endpoint, 'GET', headers=headers, urldata=data, timeout=self.timeout)
 
     async def ping_box(self):
-        # Sends a GET request
+        """Request a list of Detection ID's without a filter."""
         headers = dict()
         token = await self.get_token()
         headers['Authorization'] = f'Bearer {token}'
@@ -60,7 +58,7 @@ class APIClient:
         return await self.client.call_api(self.ALERT_IDS_ENDPOINT, 'GET', headers=headers, timeout=self.timeout)
 
     async def get_detections_info(self, ids):
-        """get the response from crowdstrike endpoints
+        """Gets the detection information from the given ID
         :param ids: Provide one or more incident IDs
         :return: response, json object"""
         headers = dict()
@@ -75,11 +73,10 @@ class APIClient:
 
     async def get_token(self) -> str:
         """Request a new OAuth2 token.
-        :return: [description]
+        :return: The token that was generated.
         :rtype: str
         """
         if self.token_expired():
-
             headers={
                 'accept': 'application/json',
                 'user-agent': 'oca_stixshifter_1.0',
