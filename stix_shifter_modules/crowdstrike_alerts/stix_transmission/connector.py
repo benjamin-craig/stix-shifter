@@ -3,167 +3,149 @@ from stix_shifter_utils.modules.base.stix_transmission.base_json_sync_connector 
 from .api_client import APIClient
 from stix_shifter_utils.utils.error_response import ErrorResponder
 from stix_shifter_utils.utils import logger
+from stix_shifter_modules.crowdstrike_alerts.stix_transmission.api_client import APIResponseException
 from requests.exceptions import ConnectionError
 
-
-class QueryException(Exception):
-    pass
 
 class Connector(BaseJsonSyncConnector):
     init_error = None
     logger = logger.set_logger(__name__)
     PROVIDER = 'CrowdStrike'
-    IDS_LIMIT = 500
+    IDS_LIMIT=500
 
     def __init__(self, connection, configuration):
-        """Initialization.
-        :param connection: dict, connection dict
-        :param configuration: dict,config dict"""
         self.connector = __name__.split('.')[1]
-        
-        try:
-            self.api_client = APIClient(connection, configuration)
-            self.result_limit = Connector.get_result_limit(connection)
-
-        except Exception as ex:
-            self.init_error = ex
-
-    def _handle_errors(self, response, return_obj):
-        """Handling API error response
-        :param response: response for the API
-        :param return_obj: dict, response for the API call with status
-        """
-        response_code = response.code
-        response_txt = response.read().decode('utf-8')
-        response_type = response.headers.get('Content-Type')
-        response_dict = {}
-
-        if 200 <= response_code < 300:
-            return_obj['success'] = True
-            return_obj['data'] = response_txt
-            return return_obj
-        elif response_code >= 400:
-            if response_type == 'application/json':
-                error_response = json.loads(response_txt)
-                response_dict['type'] = 'ValidationError'
-                response_dict['message'] = error_response['errors'][0]['message']
-                ErrorResponder.fill_error(return_obj, response_dict, ['message'], connector=self.connector)
-                raise QueryException(return_obj)
-            elif response_type == 'text/html':
-                error = ConnectionError(f'Error connecting the datasource: {response_txt}')
-                ErrorResponder.fill_error(return_obj, response_dict, error=error, connector=self.connector)
-                raise QueryException(return_obj)
-            else:
-                raise Exception(response_txt)
-
+        self.api_client = APIClient(connection, configuration)
+        self.result_limit = connection['options'].get('result_limit', 10000)
+        self.batchsize = connection['options'].get('batch_size')
+        self.status = dict()
     
     async def ping_connection(self):
-        response_txt = None
         return_obj = {}
-        response_dict = {}
         try:
-            response = await self.api_client.ping_box()
+            self.logger.debug(f"Attempting to ping the service for an auth token")
+            response = await self.api_client.ping_box(self.status)
             response_code = response.code
-            response_txt = response.read().decode('utf-8')
+            response_msg = response.read().decode('utf-8')
             response_type = response.headers.get('Content-Type')
-            if 199 < response_code < 300:
+            if response_code == 200:
+                self.logger.debug(f"Successfully pinged the device for an auth token")
                 return_obj['success'] = True
-            elif response_code == 401:
-                if response_type == 'application/json':
-                    error_response = json.loads(response_txt)
-                    response_dict['type'] = 'AuthenticationError'
-                    response_dict['message'] = error_response['errors'][0]['message']
-                    self.logger.error('Error connecting the Crowdstrike datasource: ' + str(error_response))
-                    ErrorResponder.fill_error(return_obj, response_dict, ['message'], connector=self.connector)
-                else:
-                    raise Exception(response_txt)
-            elif response_code == 400:
-                if response_type == 'application/json':
-                    error_response = json.loads(response_txt)
-                    response_dict['type'] = 'ValidationError'
-                    response_dict['message'] = error_response['errors'][0]['message']
-                    self.logger.error('Error connecting the Crowdstrike datasource: ' + str(error_response))
-                    ErrorResponder.fill_error(return_obj, response_dict, ['message'], connector=self.connector)
-                else:
-                    raise Exception(response_txt)
             else:
-                if response_type == 'application/json':
-                    response_error_ping = json.loads(response_txt)
-                    response_dict = response_error_ping['errors'][0]
-                    ErrorResponder.fill_error(return_obj, response_dict, ['message'], connector=self.connector)
-                elif response_type == 'text/html':
-                    error = ConnectionError(f'Error connecting the datasource: {response_txt}')
-                    ErrorResponder.fill_error(return_obj, response_dict, error=error, connector=self.connector)
-                else:
-                    raise Exception(response_txt)
+                raise APIResponseException(response_code, response_msg, response_type, response)
         except Exception as e:
-            if response_txt is not None:
-                ErrorResponder.fill_error(return_obj, message='unexpected exception: ' + str(response_txt), connector=self.connector)
-                self.logger.error('Can not parse response Crowdstrike error: ' + str(response_txt))
-            else:
-                raise e
+            return self._handle_Exception(e)
 
         return return_obj
 
-    async def send_info_request_and_handle_errors(self, ids_lst):
+    async def create_results_connection(self, query, offset, length, metadata=None):
+        #Initialize the starting offset and initial variables to empty.
         return_obj = dict()
-        response = await self.api_client.get_detections_info(ids_lst)
-        return_obj = self._handle_errors(response, return_obj)
-        response_json = json.loads(return_obj["data"])
-        return_obj['data'] = response_json['resources']
-
-        return return_obj
-
-    async def handle_detection_info_request(self, ids):
-        ids = [ids[x:x + self.IDS_LIMIT] for x in range(0, len(ids), self.IDS_LIMIT)]
-        ids_lst = ids.pop(0)
-        return_obj = await self.send_info_request_and_handle_errors(ids_lst)
-
-        for ids_lst in ids:
-            curr_obj = await self.send_info_request_and_handle_errors(ids_lst)
-            return_obj['data'].extend(curr_obj['data'])
-        return return_obj
-
-    @staticmethod
-    def get_result_limit(connection):
-        default_result_limit = Connector.IDS_LIMIT
-        if 'options' in connection:
-            return connection['options'].get('result_limit', default_result_limit)
-        return default_result_limit
-
-    async def create_results_connection(self, query, offset, length):
-        """"built the response object
-        :param query: str, search_id
-        :param offset: int,offset value
-        :param length: int,length value"""
-        result_limit = offset + length
-        ids_obj = dict()
-        return_obj = dict()
-
+        if(metadata == None):
+            metadata = dict()
+            current_offset = offset
+            metadata["result_count"] = 0
+        else:
+            current_offset = metadata["offset"]
+        
         try:
-            if self.init_error:
-                raise self.init_error
+            #Query the alert endpoint to get a list of ID's. The ID's are in a list of list format.  
+            alert_id_list = await self._get_alert_id(length, query, current_offset, metadata)
+            
+            #Separate the ID list into batchsize segments to be processed. 500 is the maximum.
+            list_of_alert_id_list = [alert_id_list[x:x + min(500,self.batchsize)] for x in range(0, len(alert_id_list), min(500,self.batchsize))]
+            
+            #For each list of ID's, get the data from those ID's.
+            alert_info = await self._get_alert_info(list_of_alert_id_list)
+        except Exception as e:
+            return self._handle_Exception(e)
+                
+        #If the total count is greater than the result limit, 
+        if(metadata["offset"] > self.result_limit):
+            alert_info = alert_info[0:(self.result_limit - offset)-1]
+        
+        if(metadata["result_count"] >= self.result_limit) or len(alert_info) < length:
+            metadata == None
+        
+        return_obj["success"] = True
+        return_obj["metadata"] = metadata
+        return_obj["data"] = alert_info
+        return return_obj
+    
+    async def _get_alert_id(self, length, query, current_offset, metadata):
+        alert_id_list = []
+        self.logger.debug(f"Collecting ID's using the following query/filter : {query}")
+        while (len(alert_id_list) < length):
+            #Get the next batch of ID's to process. We use length as batch size as this only gets the ID, not the data.
+            #10000 is the maximum amount that can be asked for at once.
+            self.logger.debug(f"Using the following settings to get a batch of ID's: offset : {current_offset}, length : {min(10000,length)}")
 
-            response = await self.api_client.get_alert_IDs(query, result_limit)
-            self._handle_errors(response, ids_obj)
-            response_json = json.loads(ids_obj["data"])
-            ids_obj['ids'] = response_json.get('resources')
+            get_ids_response = await self.api_client.get_alert_IDs(query, str(current_offset), str(min(10000,length)))
+            if get_ids_response.code == 200:
+                self.logger.debug(f"Successfully got a list of ID's")
 
-            if ids_obj['ids']:  # There are not detections that match the filter arg
-                return_obj = await self.handle_detection_info_request(ids_obj['ids'])
+                get_ids_data = get_ids_response.read().decode('utf-8')
+                get_ids_json = json.loads(get_ids_data)
+                if (len(get_ids_json.get('resources')) >= min(10000,length)):
+                    alert_id_list.extend(get_ids_json.get('resources'))
+                else:
+                    alert_id_list.extend(get_ids_json.get('resources'))
+                    current_offset = current_offset + len(get_ids_json.get('resources'))
+                    break
+                
+                self.logger.debug(f"Did not reach the length requested, making another request")
+                current_offset = current_offset + min(10000,length)
+            else:
+                raise APIResponseException(get_ids_response.code, get_ids_response.content, get_ids_response.headers.get('Content-Type'), get_ids_response)
+        
+        #We now know the next meta_data offset
+        metadata["offset"] = current_offset
+        return alert_id_list
+    
+    async def _get_alert_info(self, list_of_alert_id_list):
+        alert_info = []
+        for alert_id_list in list_of_alert_id_list:
+            self.logger.debug(f"Requesting the following IDs : {alert_id_list}")
 
-            if not return_obj.get('success'):
-                if(not return_obj.get('data')):
-                    return_obj['data'] = {}
-                return_obj['success'] = True
-            return return_obj
-        except QueryException as ex:
-            return ex.args[0]
+            alert_info_response = await self.api_client.get_alert_info(alert_id_list)
+            if alert_info_response.code == 200:
+                get_alert_info_data = alert_info_response.read().decode('utf-8')
+                get_ids_json = json.loads(get_alert_info_data)
+                alert_info.extend(get_ids_json['resources'])
+            else:
+                raise APIResponseException(alert_info_response.code, alert_info_response.content, alert_info_response.headers.get('Content-Type'), alert_info_response)
+        return alert_info  
+    
+    def _handle_Exception(self, exception):
+        return_obj = dict()
+        try:
+            raise exception
+        except APIResponseException as ex:
+            return self._handle_api_response(ex)
         except Exception as ex:
             error_dict = {}
             error_dict['type'] = 'AttributeError'
             error_dict['message'] = 'Error while parsing API response: ' + str(ex)
             ErrorResponder.fill_error(return_obj, error_dict, ['message'], connector=self.connector)
-            self.logger.error('Unexpected exception from Crowdstrike datasource: ' + str(ex))
-
             return return_obj
+        
+    def _handle_api_response(self, rest_api_exception):
+        response_dict = {}
+        return_obj = {}
+        connection_error = None
+        
+        if (rest_api_exception.content_header_type == 'application/json'):
+            response = json.loads(rest_api_exception.error_message)
+            response_dict['message'] = response['errors'][0]['message']
+            if (rest_api_exception.error_code == 400):
+                response_dict['type'] = 'ValidationError'
+            elif (rest_api_exception.error_code == 401):
+                response_dict['type'] = 'AuthenticationError'                    
+        elif (rest_api_exception.content_header_type == 'text/html'):
+            response = rest_api_exception.error_message
+            connection_error = ConnectionError(f'Error connecting the datasource: {rest_api_exception.error_message}')
+        else:
+            raise Exception(rest_api_exception.error_message)
+        
+        ErrorResponder.fill_error(return_obj, response_dict, ['message'], error=connection_error, connector=self.connector)
+        return return_obj

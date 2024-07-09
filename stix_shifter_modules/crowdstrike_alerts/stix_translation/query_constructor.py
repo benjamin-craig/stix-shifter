@@ -153,6 +153,7 @@ class CSQueryStringPatternTranslator:
 
         return n_queries
 
+
     def parse_expression(self, pattern: Pattern):
         queries = self._parse_expression(pattern)
         return self._add_default_timerange_to_queries(queries)
@@ -160,6 +161,7 @@ class CSQueryStringPatternTranslator:
 
 def translate_pattern(pattern: Pattern, data_model_mapping, options):
     time_range = options['time_range']
+    
 
     translated_statements_lst = CSQueryStringPatternTranslator(pattern, data_model_mapping, time_range)
     translated_statements = ",".join(translated_statements_lst.queries)

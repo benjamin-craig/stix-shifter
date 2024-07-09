@@ -790,3 +790,19 @@ opencybersecurityalliance/stix-shifter/pull/1448)
 * Bump stix2-validator from 1.1.2 to 3.0.2
 * Bump boto3 from 1.17.20 to 1.21.5## 4.0.0 (2022-02-23)
 
+## /Users/derekrushton/StixShifter/stix-shifter (2024-07-04)
+
+### Breaking changes:
+
+### Deprecations:
+
+### Changes:
+
+
+
+### Fixes:
+
+### Dependency update:
+
+--------------------------------------
+
