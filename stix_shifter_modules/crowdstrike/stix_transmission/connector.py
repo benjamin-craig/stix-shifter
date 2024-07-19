@@ -193,6 +193,7 @@ class Connector(BaseJsonSyncConnector):
 
             if ids_obj['ids']:  # There are not detections that match the filter arg
                 return_obj = await self.handle_detection_info_request(ids_obj['ids'])
+                
               for event_data in return_obj['data']:
                      device_data = event_data['device']
                      hostinfo_data = event_data['hostinfo']
