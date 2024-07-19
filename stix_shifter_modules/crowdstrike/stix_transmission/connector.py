@@ -193,7 +193,39 @@ class Connector(BaseJsonSyncConnector):
 
             if ids_obj['ids']:  # There are not detections that match the filter arg
                 return_obj = await self.handle_detection_info_request(ids_obj['ids'])
+              for event_data in return_obj['data']:
+                     device_data = event_data['device']
+                     hostinfo_data = event_data['hostinfo']
+                     device_data.update(hostinfo_data)  # device & host
+                     build_device_data = {k: v for k, v in device_data.items() if v}  # device & host
+                     build_data = {k: v for k, v in event_data.items() if not isinstance(v, dict)
+                                   and k not in 'behaviors'}  # other detection fields
+                     build_data.update(build_device_data)
+                     quarantined_files = event_data.get('quarantined_files')
 
+                     if quarantined_files:
+                         quarantined_files_lst = self._handle_quarantined_files(quarantined_files, build_data)
+                         table_event_data.extend(quarantined_files_lst)
+                     event_data.pop("quarantined_files", None)
+
+                     for behavior in event_data['behaviors']:
+                         ioc_type = behavior.pop("ioc_type", None)
+                         ioc_source = behavior.pop("ioc_source", None)
+                         ioc_value = behavior.pop("ioc_value", None)
+                         ioc_data = self._handle_ioc(ioc_type, ioc_source, ioc_value)
+                         build_ioc_data = {k: v for k, v in ioc_data.items() if v}
+                         parent_details_data = behavior['parent_details']
+                         build_event_data = {k: v for k, v in behavior.items() if v and not isinstance(v, dict)}
+                         build_event_data.update(parent_details_data)
+                         build_event_data.update(build_data)
+                         build_event_data.update(build_ioc_data)
+                         # build_event_data['device'] = build_device_data
+                         build_event_data.pop('device_id')
+                         build_event_data['provider'] = Connector.PROVIDER
+                         build_event_data = {k: v for k, v in build_event_data.items() if v != "N/A"}
+                         table_event_data.append(build_event_data)
+
+             return_obj['data'] = table_event_data
             if not return_obj.get('success'):
                 return_obj['success'] = True
             return return_obj
