@@ -11,10 +11,3 @@ class CrowdStrikeFormatMac(ValueTransformer):
     def transform(mac):
         value = mac.replace("-", ":")
         return value.lower()
-
-class GraphIDToPID(ValueTransformer):
-    """A value transformer that converts a single value into a list container the value"""
-    @staticmethod
-    def transform(obj):
-        obj = obj.split(':')
-        return int(obj[2])

@@ -24,14 +24,14 @@ class Connector(BaseJsonSyncConnector):
         return_obj = {}
         try:
             self.logger.debug(f"Attempting to ping the service for an auth token")
-            response = await self.api_client.ping_box(self.status)
+            response = await self.api_client.ping_box()
             response_code = response.code
             response_msg = response.read().decode('utf-8')
-            response_type = response.headers.get('Content-Type')
             if response_code == 200:
                 self.logger.debug(f"Successfully pinged the device for an auth token")
                 return_obj['success'] = True
             else:
+                response_type = response.headers.get('Content-Type')
                 raise APIResponseException(response_code, response_msg, response_type, response)
         except Exception as e:
             return self._handle_Exception(e)
@@ -65,7 +65,7 @@ class Connector(BaseJsonSyncConnector):
             alert_info = alert_info[0:(self.result_limit - offset)-1]
         
         if(metadata["result_count"] >= self.result_limit) or len(alert_info) < length:
-            metadata == None
+            metadata = None
         
         return_obj["success"] = True
         return_obj["metadata"] = metadata
@@ -120,14 +120,8 @@ class Connector(BaseJsonSyncConnector):
         return_obj = dict()
         try:
             raise exception
-        except APIResponseException as ex:
-            return self._handle_api_response(ex)
         except Exception as ex:
-            error_dict = {}
-            error_dict['type'] = 'AttributeError'
-            error_dict['message'] = 'Error while parsing API response: ' + str(ex)
-            ErrorResponder.fill_error(return_obj, error_dict, ['message'], connector=self.connector)
-            return return_obj
+            return self._handle_api_response(ex)
         
     def _handle_api_response(self, rest_api_exception):
         response_dict = {}

@@ -76,9 +76,6 @@ class APIClient:
                     token = response_json.get('access_token')
                     self._token = token
                     self._token_time = datetime.now()
-                else:
-                    self.logger.debug(f"Get authentication token did not include an authentication token")
-                    raise APIResponseException(get_token_response.code, get_token_response.content, get_token_response.headers.get('Content-Type'), get_token_response)
             else:
                 self.logger.debug(f"Get authentication token was not successful.")
                 raise APIResponseException(get_token_response.code, get_token_response.content, get_token_response.headers.get('Content-Type'), get_token_response)
