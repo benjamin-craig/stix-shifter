@@ -18,11 +18,11 @@
             "type" : "fields",
             "client_id": {
                 "label": "Client ID",
-                "description": "Unique identifier of CrowdStrike API. It can be found in the API client table in the Falcon console"
+                "description": "Unique identifier for CrowdStrike APIs. An API Client can be created in the API clients and keys section of the Falcon console"
             },
             "client_secret": {
                 "label": "Client secret",
-                "description": "Secret code of CrowdStrike API client. It can be found while creating a API client in Falcon console"
+                "description": "Secret code for CrowdStrike API client. An API Client can be created in the API clients and keys section of the Falcon console"
             }
         }
     }
