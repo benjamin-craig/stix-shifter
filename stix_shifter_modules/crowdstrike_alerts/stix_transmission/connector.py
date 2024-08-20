@@ -41,6 +41,9 @@ class Connector(BaseJsonSyncConnector):
     async def create_results_connection(self, query, offset, length, metadata=None):
         #Initialize the starting offset and initial variables to empty.
         return_obj = dict()
+        length = int(length)
+        offset = int(offset)
+        
         if(metadata == None):
             metadata = dict()
             current_offset = offset
@@ -117,11 +120,16 @@ class Connector(BaseJsonSyncConnector):
         return alert_info  
     
     def _handle_Exception(self, exception):
-        return_obj = dict()
+        response_dict = {}
+        return_obj = {}
         try:
             raise exception
-        except Exception as ex:
+        except APIResponseException as ex:
             return self._handle_api_response(ex)
+        except Exception as ex:
+            ErrorResponder.fill_error(return_obj, response_dict, error=ex, connector=self.connector)
+            return return_obj
+        
         
     def _handle_api_response(self, rest_api_exception):
         response_dict = {}
@@ -141,5 +149,5 @@ class Connector(BaseJsonSyncConnector):
         else:
             raise Exception(rest_api_exception.error_message)
         
-        ErrorResponder.fill_error(return_obj, response_dict, ['message'], error=connection_error, connector=self.connector)
+        ErrorResponder.fill_error(return_obj, response_dict, response_dict['message'], error=connection_error, connector=self.connector)
         return return_obj

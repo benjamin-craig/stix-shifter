@@ -65,7 +65,7 @@ $ python3 main.py execute crowdstrike_alerts crowdstrike_alerts "<data_source>" 
 
 
 ```bash
-$ python3 main.py execute crowdstrike_alerts crowdstrike_alerts "{\"type\":\"identity\",\"id\":\"identity--f431f809-377b-45e0-aa1c-6a4751cae5ff\",\"name\":\"Crowdstrike\",\"identity_class\":\"events\", \"created\":\"2022-05-22T13:22:50.336Z\",\"modified\":\"2022-05-25T13:22:50.336Z\"}" "{\"host\":\"[host\"}" "{\"auth\":{\"client_id\":\"[id]\", \"client_secret\":\"u9fE7zS4yM25XVDvtKmBY8qUj6d1AohP3pRscLC0\"}}" "[ipv4-addr:value != '1.1.1.1'] START t'2024-03-01T11:00:00.000Z' STOP t'2024-07-03T11:54:00.000Z'" -r 100
+$ python3 main.py execute crowdstrike_alerts crowdstrike_alerts "{\"type\":\"identity\",\"id\":\"identity--f431f809-377b-45e0-aa1c-6a4751cae5ff\",\"name\":\"Crowdstrike\",\"identity_class\":\"events\", \"created\":\"2022-05-22T13:22:50.336Z\",\"modified\":\"2022-05-25T13:22:50.336Z\"}" "{\"host\":\"[host\"}" "{\"auth\":{\"client_id\":\"[id]\", \"client_secret\":\"[secret]\"}}" "[ipv4-addr:value != '1.1.1.1'] START t'2024-03-01T11:00:00.000Z' STOP t'2024-07-03T11:54:00.000Z'" -r 100
 ```
 
 Note in this example some logging is omitted.
