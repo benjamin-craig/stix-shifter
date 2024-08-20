@@ -15,6 +15,34 @@ We have started this changelogs from version 4.0.0. So, changes on previously re
 *List the dependecy upgrade or downgrade.*
 
 --------------------------------------
+
+## 7.0.12 (2024-08-20)
+
+### Breaking changes:
+
+### Deprecations:
+
+### Changes:
+
+*  Updating urllib3 to 1.26.19 [#1725](https://github.com/opencybersecurityalliance/stix-shifter/pull/1725)
+*  Resolved Tanium Connector errors [#1722](https://github.com/opencybersecurityalliance/stix-shifter/pull/1722) 
+                                    [#1721](https://github.com/opencybersecurityalliance/stix-shifter/pull/1721)
+                                    [#1693](https://github.com/opencybersecurityalliance/stix-shifter/pull/1693)
+*  Added contrast scans [#1719](https://github.com/opencybersecurityalliance/stix-shifter/pull/1719)
+                        [#1718](https://github.com/opencybersecurityalliance/stix-shifter/pull/1718)
+                        [#1717](https://github.com/opencybersecurityalliance/stix-shifter/pull/1717)
+                        [#1715](https://github.com/opencybersecurityalliance/stix-shifter/pull/1715)
+*  Added an AUTHORS.MD file [#1713](https://github.com/opencybersecurityalliance/stix-shifter/pull/1713)
+                            [#1712](https://github.com/opencybersecurityalliance/stix-shifter/pull/1712)
+
+
+### Fixes:
+
+*  Removed the unused request toolbelt dependency [#1723](https://github.com/opencybersecurityalliance/stix-shifter/pull/1723)
+
+### Dependency update:
+
+--------------------------------------
 ## 7.0.11 (2024-07-11)
 
 ### Breaking changes:
