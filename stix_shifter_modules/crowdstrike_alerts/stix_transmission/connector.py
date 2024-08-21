@@ -149,5 +149,5 @@ class Connector(BaseJsonSyncConnector):
         else:
             raise Exception(rest_api_exception.error_message)
         
-        ErrorResponder.fill_error(return_obj, response_dict, response_dict['message'], error=connection_error, connector=self.connector)
+        ErrorResponder.fill_error(return_obj, response_dict, ['message'], error=connection_error, connector=self.connector)
         return return_obj
