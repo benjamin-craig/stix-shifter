@@ -322,14 +322,6 @@
         "key": "process.parent_process_ref",
         "object": "parent_process_object",
         "references": "grandparent_process_object"
-      },
-      {
-        "key": "process.child_refs",
-        "object": "grandparent_process_object",
-        "references": [
-          "parent_process_object"
-        ],
-        "group": true
       }
     ],
     "filename": [
@@ -462,14 +454,6 @@
         "key": "process.parent_process_ref",
         "object": "process_object",
         "references": "parent_process_object"
-      },
-      {
-        "key": "process.child_refs",
-        "object": "parent_process_object",
-        "references": [
-          "process_object"
-        ],
-        "group": true
       }
     ],
     "filename": [
