@@ -287,7 +287,7 @@
       "object": "process_object"
     },
     {
-      "key": "process.binary_ref",
+      "key": "process.image_ref",
       "object": "process_object",
       "references": "file_object"
     },
@@ -334,7 +334,7 @@
         "object": "grandparent_process_object"
       },
       {
-        "key": "process.binary_ref",
+        "key": "process.image_ref",
         "object": "grandparent_process_object",
         "references": "grandparent_file_object"
       }
@@ -372,7 +372,7 @@
     },
     "timestamp": [
       {
-        "key": "file.accessed",
+        "key": "file.atime",
         "object": "grandparent_file_object"
       },
       {
@@ -380,7 +380,7 @@
         "object": "grandparent_process_object"
       },
       {
-        "key": "directory.accessed",
+        "key": "directory.atime",
         "object": "grandparent_directory_object"
       }
     ],
@@ -466,7 +466,7 @@
         "object": "parent_process_object"
       },
       {
-        "key": "process.binary_ref",
+        "key": "process.image_ref",
         "object": "parent_process_object",
         "references": "parent_file_object"
       }
@@ -504,7 +504,7 @@
     },
     "timestamp": [
       {
-        "key": "file.accessed",
+        "key": "file.atime",
         "object": "parent_file_object"
       },
       {
@@ -512,7 +512,7 @@
         "object": "parent_process_object"
       },
       {
-        "key": "directory.accessed",
+        "key": "directory.atime",
         "object": "parent_directory_object"
       }
     ],
@@ -725,7 +725,7 @@
   },
   "timestamp": [
     {
-      "key": "file.accessed",
+      "key": "file.atime",
       "object": "file_object"
     },
     {
@@ -733,7 +733,7 @@
       "object": "process_object"
     },
     {
-      "key": "directory.accessed",
+      "key": "directory.atime",
       "object": "directory_object"
     }
   ],
@@ -1028,11 +1028,11 @@
     ],
     "timestamp": [
       {
-        "key": "file.accessed",
+        "key": "file.atime",
         "object": "document_file_object"
       },
       {
-        "key": "directory.accessed",
+        "key": "directory.atime",
         "object": "document_directory_object"
       }
     ],
@@ -1063,11 +1063,11 @@
     ],
     "timestamp": [
       {
-        "key": "file.accessed",
+        "key": "file.atime",
         "object": "document_file_object"
       },
       {
-        "key": "directory.accessed",
+        "key": "directory.atime",
         "object": "document_directory_object"
       }
     ],
@@ -1098,11 +1098,11 @@
     ],
     "timestamp": [
       {
-        "key": "file.accessed",
+        "key": "file.atime",
         "object": "document_file_object"
       },
       {
-        "key": "directory.accessed",
+        "key": "directory.atime",
         "object": "document_directory_object"
       }
     ],
@@ -1133,11 +1133,11 @@
     ],
     "timestamp": [
       {
-        "key": "file.accessed",
+        "key": "file.atime",
         "object": "document_file_object"
       },
       {
-        "key": "directory.accessed",
+        "key": "directory.atime",
         "object": "document_directory_object"
       }
     ],
