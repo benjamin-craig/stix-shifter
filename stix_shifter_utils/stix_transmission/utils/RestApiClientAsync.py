@@ -101,7 +101,7 @@ class RestApiClientAsync:
         try:
             client_timeout = ClientTimeout(connect=self.connect_timeout, total=timeout) # https://docs.aiohttp.org/en/stable/client_reference.html?highlight=timeout#aiohttp.ClientTimeout
             retry_options = ExponentialRetry(attempts=self.retry_max, statuses=[429, 500, 502, 503, 504])
-            async with RetryClient(retry_options=retry_options) as client:
+            async with RetryClient(retry_options=retry_options, trust_env=True) as client:
                 call = getattr(client, method.lower()) 
 
                 async with call(url, headers=actual_headers, params=urldata, data=data,
