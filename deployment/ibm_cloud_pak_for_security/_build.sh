@@ -166,7 +166,7 @@ fi
 
 REGISTRY_USER=`oc whoami`
 echo "Logging in into internal registry $REPOSITORY as $REGISTRY_USER ..."
-podman login -u $REGISTRY_USER -p `oc whoami -t` $REPOSITORY
+podman login -u $REGISTRY_USER -p `oc whoami -t` $REPOSITORY --tls-verify=false
 
 if [ ! -z "${IMAGE_URL}" ]; then
   echo "Pulling ${IMAGE_URL}"
