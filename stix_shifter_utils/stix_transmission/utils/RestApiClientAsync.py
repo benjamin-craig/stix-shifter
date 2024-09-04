@@ -57,11 +57,12 @@ class RestApiClientAsync:
         unique_file_handle = uuid.uuid4()
         self.server_cert_name = "/tmp/{0}-server_cert.pem".format(unique_file_handle)
         server_ip = host
-
+        
         #To enable proxy, set the environment variable "STIX_SHIFTER_ENABLE_TRUST_ENV" to true. This option will allow the connection
-        #to use the system environments proxy settings. This can be done by setting the "https_proxy" environment variable to
+        #to use the system environments proxy settings. This can be done by setting the "https_proxy" environment variable to 
         #"http(s)://[username]:[password]@[hostname]/[ipaddress]:[port]". Alternative proxy schema's may or may not work.
-        self.trust_env_enabled = os.environ.get("STIX_SHIFTER_ENABLE_TRUST_ENV", "False").lower()
+        self.trust_env_enabled = os.environ.get("STIX_SHIFTER_ENABLE_TRUST_ENV", "TRUE").lower()
+
         if self.trust_env_enabled == "true":
             self.trust_env_enabled = True
         else:
@@ -112,7 +113,9 @@ class RestApiClientAsync:
         try:
             client_timeout = ClientTimeout(connect=self.connect_timeout, total=timeout) # https://docs.aiohttp.org/en/stable/client_reference.html?highlight=timeout#aiohttp.ClientTimeout
             retry_options = ExponentialRetry(attempts=self.retry_max, statuses=[429, 500, 502, 503, 504])
-            async with RetryClient(retry_options=retry_options, trust_env=True) as client:
+            
+            async with RetryClient(trust_env=self.trust_env_enabled, retry_options=retry_options) as client:
+
                 call = getattr(client, method.lower()) 
 
                 async with call(url, headers=actual_headers, params=urldata, data=data,
