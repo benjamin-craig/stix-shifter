@@ -1,15 +1,15 @@
      atp:
       - name: main
         image: isc-car-connector-atp
-        tag: 2.8.10
+        tag: 2.8.11
      aws:
       - name: main
         image: isc-car-connector-aws
-        tag: 2.8.10
+        tag: 2.8.11
      azure:
       - name: main
         image: isc-car-connector-azure
-        tag: 2.8.10
+        tag: 2.8.11
      drm:
       - name: main
         image: isc-car-connector-drm
@@ -17,212 +17,216 @@
      carcybereason:
       - name: main
         image: isc-car-connector-cybereason
-        tag: 2.8.10
+        tag: 2.8.11
      carcrowdstrike:
       - name: main
         image: isc-car-connector-crowdstrike
-        tag: 2.8.10
+        tag: 2.8.11
      gcp:
       - name: main
         image: isc-car-connector-gcp
-        tag: 2.8.10
+        tag: 2.8.11
      guardium:
       - name: main
         image: isc-car-connector-guardium
-        tag: 1.4.0
+        tag: 1.4.1
      iam:
       - name: main
         image: isc-car-connector-iam
-        tag: 1.4.4
+        tag: 1.4.5
      carqradar:
       - name: main
         image: isc-car-connector-qradar
-        tag: 3.1.6.2
+        tag: 3.1.6.4
      tanium:
       - name: main
         image: isc-car-connector-tanium
-        tag: 2.8.10
+        tag: 2.8.11
      tenable:
       - name: main
         image: isc-car-connector-tenable
-        tag: 1.6.4
+        tag: 1.6.5
      nozomi:
       - name: main
         image: isc-car-connector-nozomi
-        tag: 2.8.10
+        tag: 2.8.11
      okta:
       - name: main
         image: isc-car-connector-okta
-        tag: 2.8.10
+        tag: 2.8.11
      proofpoint:
       - name: main
         image: isc-car-connector-proofpoint
-        tag: 2.8.10
+        tag: 2.8.11
      qualys:
       - name: main
         image: isc-car-connector-qualys
-        tag: 2.8.10
+        tag: 2.8.11
      randori:
       - name: main
         image: isc-car-connector-randori
-        tag: 2.8.10
+        tag: 2.8.11
      rhacs:
       - name: main
         image: isc-car-connector-rhacs
-        tag: 2.8.10
+        tag: 2.8.11
      arcsight:
       - name: main
         image: stix_shifter_modules_arcsight
-        tag: 7.1.0
+        tag: 7.1.1
      awsathena:
       - name: main
         image: stix_shifter_modules_aws_athena
-        tag: 7.1.0
+        tag: 7.1.1
      awscloudwatchlogs:
       - name: main
         image: stix_shifter_modules_aws_cloud_watch_logs
-        tag: 7.1.0
+        tag: 7.1.1
      udiawsguardduty:
       - name: main
         image: stix_shifter_modules_aws_guardduty
-        tag: 7.1.0
+        tag: 7.1.1
      udiazureloganalytics:
       - name: main
         image: stix_shifter_modules_azure_log_analytics
-        tag: 7.1.0
+        tag: 7.1.1
      azuresentinel:
       - name: main
         image: stix_shifter_modules_azure_sentinel
-        tag: 7.1.0
+        tag: 7.1.1
      bigfix:
       - name: main
         image: stix_shifter_modules_bigfix
-        tag: 7.1.0
+        tag: 7.1.1
      carbonblack:
       - name: main
         image: stix_shifter_modules_carbonblack
-        tag: 7.1.0
+        tag: 7.1.1
      cbcloud:
       - name: main
         image: stix_shifter_modules_cbcloud
-        tag: 7.1.0
+        tag: 7.1.1
      udiciscosecureemail:
       - name: main
         image: stix_shifter_modules_cisco_secure_email
-        tag: 7.1.0
+        tag: 7.1.1
      crowdstrike:
       - name: main
         image: stix_shifter_modules_crowdstrike
-        tag: 7.1.0
+        tag: 7.1.1
+     udicrowdstrikealerts:
+      - name: main
+        image: stix_shifter_modules_crowdstrike_alerts
+        tag: 7.1.1
      udicrowdstrikelogscale:
       - name: main
         image: stix_shifter_modules_crowdstrike_logscale
-        tag: 7.1.0
+        tag: 7.1.1
      cybereason:
       - name: main
         image: stix_shifter_modules_cybereason
-        tag: 7.1.0
+        tag: 7.1.1
      udidarktrace:
       - name: main
         image: stix_shifter_modules_darktrace
-        tag: 7.1.0
+        tag: 7.1.1
      elasticecs:
       - name: main
         image: stix_shifter_modules_elastic_ecs
-        tag: 7.1.0
+        tag: 7.1.1
      udigcpchronicle:
       - name: main
         image: stix_shifter_modules_gcp_chronicle
-        tag: 7.1.0
+        tag: 7.1.1
      udiguardium:
       - name: main
         image: stix_shifter_modules_guardium
-        tag: 7.1.0
+        tag: 7.1.1
      udiibmsecurityverify:
       - name: main
         image: stix_shifter_modules_ibm_security_verify
-        tag: 7.1.0
+        tag: 7.1.1
      msatp:
       - name: main
         image: stix_shifter_modules_msatp
-        tag: 7.1.0
+        tag: 7.1.1
      udinozomivantage:
       - name: main
         image: stix_shifter_modules_nozomi_vantage
-        tag: 7.1.0
+        tag: 7.1.1
      udiokta:
       - name: main
         image: stix_shifter_modules_okta
-        tag: 7.1.0
+        tag: 7.1.1
      onelogin:
       - name: main
         image: stix_shifter_modules_onelogin
-        tag: 7.1.0
+        tag: 7.1.1
      udipaloalto:
       - name: main
         image: stix_shifter_modules_paloalto
-        tag: 7.1.0
+        tag: 7.1.1
      udiproofpoint:
       - name: main
         image: stix_shifter_modules_proofpoint
-        tag: 7.1.0
+        tag: 7.1.1
      proxy:
       - name: main
         image: stix_shifter_modules_proxy
-        tag: 7.1.0
+        tag: 7.1.1
      qradar:
       - name: main
         image: stix_shifter_modules_qradar
-        tag: 7.1.0
+        tag: 7.1.1
      udireaqta:
       - name: main
         image: stix_shifter_modules_reaqta
-        tag: 7.1.0
+        tag: 7.1.1
      udirhacs:
       - name: main
         image: stix_shifter_modules_rhacs
-        tag: 7.1.0
+        tag: 7.1.1
      secretserver:
       - name: main
         image: stix_shifter_modules_secretserver
-        tag: 7.1.0
+        tag: 7.1.1
      securityadvisor:
       - name: main
         image: stix_shifter_modules_security_advisor
-        tag: 7.1.0
+        tag: 7.1.1
      udisentinelone:
       - name: main
         image: stix_shifter_modules_sentinelone
-        tag: 7.1.0
+        tag: 7.1.1
      splunk:
       - name: main
         image: stix_shifter_modules_splunk
-        tag: 7.1.0
+        tag: 7.1.1
      stixbundle:
       - name: main
         image: stix_shifter_modules_stix_bundle
-        tag: 7.1.0
+        tag: 7.1.1
      udisumologic:
       - name: main
         image: stix_shifter_modules_sumologic
-        tag: 7.1.0
+        tag: 7.1.1
      udisymantecendpointsecurity:
       - name: main
         image: stix_shifter_modules_symantec_endpoint_security
-        tag: 7.1.0
+        tag: 7.1.1
      uditanium:
       - name: main
         image: stix_shifter_modules_tanium
-        tag: 7.1.0
+        tag: 7.1.1
      uditrellixendpointsecurityhx:
       - name: main
         image: stix_shifter_modules_trellix_endpoint_security_hx
-        tag: 7.1.0
+        tag: 7.1.1
      udivectra:
       - name: main
         image: stix_shifter_modules_vectra
-        tag: 7.1.0
+        tag: 7.1.1
      udisysdig:
       - name: main
         image: stix_shifter_modules_sysdig
-        tag: 7.1.0
+        tag: 7.1.1
