@@ -129,7 +129,7 @@
      udidarktrace:
       - name: main
         image: stix_shifter_modules_darktrace
-        tag: 7.1.1
+        tag: 7.1.3
      elasticecs:
       - name: main
         image: stix_shifter_modules_elastic_ecs
