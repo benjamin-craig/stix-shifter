@@ -137,7 +137,7 @@
      udigcpchronicle:
       - name: main
         image: stix_shifter_modules_gcp_chronicle
-        tag: 7.1.1
+        tag: 7.1.3
      udiguardium:
       - name: main
         image: stix_shifter_modules_guardium
